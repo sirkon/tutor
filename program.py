@@ -8,3 +8,5 @@
 from shapes import cover, color, width, height
 
 
+cover.set_color (color.orange)
+cover.line(0,0)(width,height)
