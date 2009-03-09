@@ -4,8 +4,8 @@
 import framework
 import threading
 
-height = 40
-width  = 40
+height = 200
+width  = 200
 
 class Record (dict):
     def __init__ (self, **kwarg):
@@ -65,7 +65,7 @@ class Shapes(framework.Screen):
         Заливаем площадь рисования белым цветом
         """
         global width, height
-        width, height = w - 2, h - 2
+        width, height = w, h
         global cover_not_initiated
         if cover_not_initiated:
             cover.screen = self
