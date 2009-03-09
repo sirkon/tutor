@@ -1,21 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import framework
 import threading
+import color
+
+
+import pygtk
+pygtk.require('2.0')
+import gtk, gobject, cairo
+
 
 height = 200
 width  = 200
-
-class Record (dict):
-    def __init__ (self, **kwarg):
-        super (Record, self).__init__ (**kwarg)
-        self.__dict__.update (**kwarg)
-
-color = Record (\
-    red = (255,0,0), orange = (255,0xa5,0), yellow = (255,255,0), green = (0,0x80,0), blue = (0,0,255), violet = (0x4b,0,0x82),\
-    white = (255,255,255), black = (0,0,0) \
-    )
 
 def prepare (f):
     """
@@ -24,7 +20,7 @@ def prepare (f):
     def prepared (cl, *args, **kwargs):
         cl.lock.acquire ()
         f (cl, *args, **kwargs)
-        framework.widget.queue_draw ()
+        widget.queue_draw ()
         cl.lock.release ()
     return prepared
 
@@ -56,20 +52,35 @@ class  Cover:
         return self.line_to
 
 cover = Cover ()
-cover_not_initiated = True
         
 
-class Shapes(framework.Screen):
+class Shapes(gtk.DrawingArea):
+
+    # Draw in response to an expose-event
+    __gsignals__ = { "expose-event": "override" }
+
+
+    # Handle the expose-event by drawing
+    def do_expose_event(self, event):
+
+        # Create the cairo context
+        cr = self.window.cairo_create()
+
+        # Restrict Cairo to the exposed area; avoid extra work
+        cr.rectangle(event.area.x, event.area.y,
+                     event.area.width, event.area.height)
+        cr.clip()
+        
+        self.draw(cr, *self.window.get_size())
+
+
     def draw(self, cr, w, h):
         """
         Заливаем площадь рисования белым цветом
         """
         global width, height
         width, height = w, h
-        global cover_not_initiated
-        if cover_not_initiated:
-            cover.screen = self
-            cover_not_initiated = False
+        cover.screen = self
         cr.set_source_rgb(1, 1, 1)
         cr.rectangle(0, 0, width, height)
         cr.fill()
@@ -77,14 +88,25 @@ class Shapes(framework.Screen):
 
         cover.lock.acquire ()
         for operation in cover.operations:
-            operation (cr)
+             operation (cr)
         cover.lock.release ()
         cr.stroke ()
 
         
-
+widget = None
 class MyThread (threading.Thread):
-    def run (self, *args):
-        framework.run(Shapes)
+    def run (self):
+        cover.lock.acquire()
+        window = gtk.Window()
+        window.connect("delete-event", gtk.main_quit)
+        global widget
+        widget = Shapes()
+        widget.show()
+        window.add(widget)
+        window.present()
+        cover.lock.release()
+        gtk.main()
 
+cover.lock.acquire()
 MyThread().start()
+cover.lock.release()
