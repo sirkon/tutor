@@ -31,9 +31,12 @@ class Screen(gtk.DrawingArea):
         cr.fill()
             
             # GTK mumbo-jumbo to show the widget in a window and quit when it's closed
+
+widget = None
 def run(Widget):
     window = gtk.Window()
     window.connect("delete-event", gtk.main_quit)
+    global widget
     widget = Widget()
     widget.show()
     window.add(widget)
