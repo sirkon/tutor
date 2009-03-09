@@ -18,6 +18,9 @@ color = Record (\
     )
 
 def prepare (f):
+    """
+    Декоратор для сокращения количества операций
+    """
     def prepared (cl, *args, **kwargs):
         cl.lock.acquire ()
         f (cl, *args, **kwargs)
@@ -62,9 +65,11 @@ class Shapes(framework.Screen):
         Заливаем площадь рисования белым цветом
         """
         global width, height
-        width, height = w - 1, h - 1
+        width, height = w - 2, h - 2
+        global cover_not_initiated
         if cover_not_initiated:
             cover.screen = self
+            cover_not_initiated = False
         cr.set_source_rgb(1, 1, 1)
         cr.rectangle(0, 0, width, height)
         cr.fill()
