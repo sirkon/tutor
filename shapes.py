@@ -56,6 +56,10 @@ class  Cover:
         self.operations.append (lambda c: c.arc (x, y, r, 0.0, 2.0*math.pi))
 
     @prepare
+    def rectangle (self, x, y, w, h):
+        self.operations.append (lambda c: c.rectangle (x, y, w, h))
+
+    @prepare
     def fill (self):
         self.operations.append (lambda c: c.fill ())
     
