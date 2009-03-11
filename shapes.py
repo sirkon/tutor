@@ -7,7 +7,7 @@ import color
 
 import pygtk
 pygtk.require('2.0')
-import gtk, gobject, cairo
+import gtk, gobject, cairo, math
 
 
 height = 200
@@ -19,6 +19,9 @@ def prepare (f):
     """
     def prepared (cl, *args, **kwargs):
         cl.lock.acquire ()
+        if 'color' in kwargs:
+            cl.set_color (kwargs['color'])
+            kwargs.pop ('color')
         f (cl, *args, **kwargs)
         widget.queue_draw ()
         cl.lock.release ()
@@ -46,7 +49,16 @@ class  Cover:
     @prepare
     def line_to (self, x, y):
         self.operations.append (lambda c: c.line_to(x,y))
-        
+
+    @prepare
+    def circle (self, x, y, r):
+        self.operations.append (lambda c: c.stroke())        
+        self.operations.append (lambda c: c.arc (x, y, r, 0.0, 2.0*math.pi))
+
+    @prepare
+    def fill (self):
+        self.operations.append (lambda c: c.fill ())
+    
     def line (self, x, y):
         self.move_to (x, y)
         return self.line_to
