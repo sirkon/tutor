@@ -52,12 +52,23 @@ class  Cover:
 
     @prepare
     def circle (self, x, y, r):
-        self.operations.append (lambda c: c.stroke())        
+        self.operations.append (lambda c: c.stroke())
         self.operations.append (lambda c: c.arc (x, y, r, 0.0, 2.0*math.pi))
 
     @prepare
     def rectangle (self, x, y, w, h):
         self.operations.append (lambda c: c.rectangle (x, y, w, h))
+
+    def polygon (self, point_list):
+        if len (point_list) == 1:
+            self.circle (*(lisp(point_list[0]) + [1]))
+        elif len (point_list) == 2:
+            self.line(*point_list[0])(*point_list[1])
+        else:
+            self.move_to(*point_list[0])
+            for point in point_list[1:]:
+                self.line_to(*point)
+            self.close_path()
 
     @prepare
     def fill (self):
@@ -67,13 +78,17 @@ class  Cover:
     def stroke (self):
         self.operations.append (lambda c: c.stroke ())
 
-    
+    @prepare
+    def close_path (self):
+        self.operations.append (lambda c: c.close_path())
+
+
     def line (self, x, y):
         self.move_to (x, y)
         return self.line_to
 
 cover = Cover ()
-        
+
 
 class Shapes(gtk.DrawingArea):
 
@@ -91,7 +106,7 @@ class Shapes(gtk.DrawingArea):
         cr.rectangle(event.area.x, event.area.y,
                      event.area.width, event.area.height)
         cr.clip()
-        
+
         self.draw(cr, *self.window.get_size())
 
 
@@ -113,7 +128,7 @@ class Shapes(gtk.DrawingArea):
         cover.lock.release ()
         cr.stroke ()
 
-        
+
 widget = None
 class MyThread (threading.Thread):
     def run (self):
