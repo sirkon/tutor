@@ -62,6 +62,11 @@ class  Cover:
     @prepare
     def fill (self):
         self.operations.append (lambda c: c.fill ())
+
+    @prepare
+    def stroke (self):
+        self.operations.append (lambda c: c.stroke ())
+
     
     def line (self, x, y):
         self.move_to (x, y)
