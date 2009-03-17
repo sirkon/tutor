@@ -87,6 +87,13 @@ class  Cover:
         self.move_to (x, y)
         return self.line_to
 
+    @prepare
+    def text (self, *args, **kwarg):
+        text = ''.join(map(str,args))
+        if 'at' in kwarg:
+            self.operations.append (lambda c: c.move_to(*kwarg['at']))
+        self.operations.append (lambda c: c.show_text(text))
+
 cover = Cover ()
 
 
