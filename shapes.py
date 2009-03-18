@@ -25,6 +25,7 @@ def prepare (f):
         f (cl, *args, **kwargs)
         widget.queue_draw ()
         cl.lock.release ()
+        return cl
     return prepared
 
 class  Cover:
