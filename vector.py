@@ -98,6 +98,11 @@ class Vector(list):
             Vector(map(lambda x: math.atan2(x.imag,x.real), self)),
             ]
 
+    x = property (lambda c: c[0], (lambda c,x: c.__setitem__(0,x)))
+    y = property (lambda c: c[1], (lambda c,x: c.__setitem__(1,x)))
+    z = property (lambda c: c[2], (lambda c,x: c.__setitem__(2,x)))
+
+
 
 ###############################################################################
 
@@ -150,156 +155,11 @@ def norm(a):
     except:
         raise TypeError, 'Vector::FAILURE in norm'
 
-def sum(a):
-    """
-    Returns the sum of the elements of a.
-    """
+def orth(a):
     try:
-        return reduce(lambda x, y: x+y, a, 0)
+        return a/norm(a)
     except:
-        raise TypeError, 'Vector::FAILURE in sum'
-
-# elementwise operations
-    
-def log10(a):
-    """
-    log10 of each element of a.
-    """
-    try:
-        return Vector(map(math.log10, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in log10'
-
-def log(a):
-    """
-    log of each element of a.
-    """
-    try:
-        return Vector(map(math.log, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in log'
-        
-def exp(a):
-    """
-    Elementwise exponential.
-    """
-    try:
-        return Vector(map(math.exp, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in exp'
-
-def sin(a):
-    """
-    Elementwise sine.
-    """
-    try:
-        return Vector(map(math.sin, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in sin'
-        
-def tan(a):
-    """
-    Elementwise tangent.
-    """
-    try:
-        return Vector(map(math.tan, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in tan'
-        
-def cos(a):
-    """
-    Elementwise cosine.
-    """
-    try:
-        return Vector(map(math.cos, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in cos'
-
-def asin(a):
-    """
-    Elementwise inverse sine.
-    """
-    try:
-        return Vector(map(math.asin, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in asin'
-
-def atan(a):
-    """
-    Elementwise inverse tangent.
-    """    
-    try:
-        return Vector(map(math.atan, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in atan'
-
-def acos(a):
-    """
-    Elementwise inverse cosine.
-    """
-    try:
-        return Vector(map(math.acos, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in acos'
-
-def sqrt(a):
-    """
-    Elementwise sqrt.
-    """
-    try:
-        return Vector(map(math.sqrt, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in sqrt'
-
-def sinh(a):
-    """
-    Elementwise hyperbolic sine.
-    """
-    try:
-        return Vector(map(math.sinh, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in sinh'
-
-def tanh(a):
-    """
-    Elementwise hyperbolic tangent.
-    """
-    try:
-        return Vector(map(math.tanh, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in tanh'
-
-def cosh(a):
-    """
-    Elementwise hyperbolic cosine.
-    """
-    try:
-        return Vector(map(math.cosh, a))
-    except:
-        raise TypeError, 'Vector::FAILURE in cosh'
-
-
-def pow(a,b):
-    """
-    Takes the elements of a and raises them to the b-th power
-    """
-    try:
-        return Vector(map(lambda x: x**b, a))
-    except:
-        try:
-            return Vector(map(lambda x,y: x**y, a, b))
-        except:
-            raise TypeError, 'Vector::FAILURE in pow'
-    
-def atan2(a,b):    
-    """
-    Arc tangent
-    
-    """
-    try:
-        return Vector(map(math.atan2, a, b))
-    except:
-        raise TypeError, 'Vector::FAILURE in atan2'
+        raise TypeError, 'Vector::FAILURE in ort'
 
 
 def det(*vectors):
@@ -313,4 +173,9 @@ def det(*vectors):
         raise TypeError, 'Vectors::FAILURE det not implemented for this dimension'
     a,b = vectors
     return a[0]*b[1] - a[1]*b[0]
+    
+def angle(a,b):
+    d = det(a,b)
+    d = -1.0 if d < 0.0 else 1.0
+    return d*math.acos(dot(a,b)/norm(a)/norm(b))
     

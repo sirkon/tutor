@@ -3,6 +3,7 @@
 
 import threading
 import color
+import vector
 
 
 import pygtk
@@ -95,6 +96,13 @@ class  Cover:
             self.operations.append (lambda c: c.move_to(*kwarg['at']))
         self.operations.append (lambda c: c.show_text(text))
 
+    @prepare
+    def _arc (self, x, y, r, a1, a2, negative = False):
+        if negative:
+            self.operations.append (lambda c: c.arc_negative(x,y,r,a1,a2))
+        else:
+            self.operations.append (lambda c: c.arc(x,y,r,a1,a2))
+            
 cover = Cover ()
 
 
