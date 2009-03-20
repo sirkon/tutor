@@ -3,7 +3,6 @@
 
 import threading
 import color
-import vector
 
 
 import pygtk
