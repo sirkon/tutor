@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import vector
+from vector import *
 from record import Record
 import math
 
@@ -24,13 +24,11 @@ def calculate_arc_parameters (edge1, edge2, mp):
     if sgn(N) != sgn(edge1):
         N = M - n
     i = Vector(1.0,0.0)
-    a1 = angle(i,edge1)
-    a2 = angle(i,edge2)
-    b1 = angle(
-    if a1 > a2:
-        a1, a2 = a2, a1
-    if a1 < alpha < a2:
-        return Record(R = R, center = N, phi1 = a1, phi2 = a2)
+    pi2 = 2.0*math.pi
+    a = [angle(i,edge1-N) % pi2, angle(i,mp-N) % pi2, angle(i,edge2-N) % pi2]
+    if a[0] > a[1] > a[2]:
+        a = list(reversed(a))
+    return Record(R = R, center = N, phi1 = a[0], phi2 = a[2], phi = a[1])
     
 
     

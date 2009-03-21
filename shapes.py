@@ -102,6 +102,21 @@ class  Cover:
     @prepare
     def arc_negative (self, x, y, r, a1, a2):
         self.operations.append (lambda c: c.arc_negative(x,y,r,a1,a2))
+
+    def sector(self,edge1,edge2,middle):
+        from vector import Vector
+        from arc import calculate_arc_parameters
+        a = Vector(edge1)
+        b = Vector(edge2)
+        c = Vector(middle)
+        d = calculate_arc_parameters (a,b,c)
+        print d
+        self.stroke()
+        self.arc(d.center.x, d.center.y, d.R, d.phi1, d.phi)
+        self.arc(d.center.x, d.center.y, d.R, d.phi, d.phi2)
+        
+        
+        
             
 cover = Cover ()
 
