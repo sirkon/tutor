@@ -96,11 +96,12 @@ class  Cover:
         self.operations.append (lambda c: c.show_text(text))
 
     @prepare
-    def _arc (self, x, y, r, a1, a2, negative = False):
-        if negative:
-            self.operations.append (lambda c: c.arc_negative(x,y,r,a1,a2))
-        else:
-            self.operations.append (lambda c: c.arc(x,y,r,a1,a2))
+    def arc (self, x, y, r, a1, a2):
+        self.operations.append (lambda c: c.arc(x,y,r,a1,a2))
+
+    @prepare
+    def arc_negative (self, x, y, r, a1, a2):
+        self.operations.append (lambda c: c.arc_negative(x,y,r,a1,a2))
             
 cover = Cover ()
 
