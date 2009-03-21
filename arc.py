@@ -16,12 +16,14 @@ def calculate_arc_parameters (edge1, edge2, mp):
     b = edge2 - mp
     c = edge1 - edge2
     R = reduce (lambda x,y: x*y, Vector(map(norm, [a,b,c])))/abs(2.0*det(a,b))
-    M = (edge2 + mp)/2.0
-    d = math.sqrt(R**2 - norm(M-edge2)**2)
-    n = orth(Vector(-b.x,b.y))*d
+    M = (edge1 + edge2)/2.0
+    l = edge2 - edge1
+    d = math.sqrt(R**2 - norm(l/2)**2)
+    n = orth(Vector(-l.y,l.x))*d
     L = lambda p: dot(n,p) - dot(n,edge2)
     N = M + n
-    if sgn(N) != sgn(edge1):
+    print sgn(L(N)), sgn(L(mp))
+    if sgn(L(N)) == sgn(L(mp)):
         N = M - n
     i = Vector(1.0,0.0)
     pi2 = 2.0*math.pi
